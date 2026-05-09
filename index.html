@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>디아블로4 다있소 최저가 상점</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #f8f9fa; color: #1f2937; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; min-height: 100vh; }
+  main { max-width: 100%; margin: 0; padding: 32px 16px 96px 16px; }
+  @media (min-width: 1100px) {
+    main { padding-left: 290px; padding-right: 40px; padding-top: 48px; max-width: 1500px; margin: 0 auto; }
+  }
+  pre.content, .content { white-space: pre-wrap; text-align: center; font-family: inherit; font-size: 15px; line-height: 1.9; color: #1f2937; }
+  .content h1 { font-size: 30px; font-weight: 800; margin: 24px 0 14px; color: #111827; letter-spacing: -0.02em; }
+  .content h2 { font-size: 22px; font-weight: 700; margin: 20px 0 10px; color: #1f2937; }
+  .content h3 { font-size: 17px; font-weight: 600; margin: 14px 0 8px; color: #374151; }
+  .content strong { font-weight: 700; color: #111827; }
+  .content em { font-style: italic; color: #6b7280; }
+  .content hr { border: none; border-top: 1px solid #e5e7eb; margin: 24px auto; max-width: 320px; }
+  .content .box { display: inline-block; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; padding: 4px 14px; margin: 4px 2px; font-weight: 600; color: #374151; }
+  .content .box-red { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+  .content .box-blue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+  .content .box-green { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  .content .box-amber { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+  .content .price { color: #111827; font-weight: 700; }
+  .content .strike { text-decoration: line-through; color: #9ca3af; }
+  .content .highlight { background: linear-gradient(180deg, transparent 60%, #fde68a 60%); padding: 0 4px; }
+  .content .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; text-align: left; }
+  @media (max-width: 600px) { .content .grid { grid-template-columns: 1fr; gap: 12px; } }
+  .content .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px 22px; line-height: 1.7; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: box-shadow 0.2s, transform 0.2s; }
+  .content .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .content .card-title { font-size: 17px; font-weight: 700; color: #6b21a8; margin-bottom: 4px; }
+  .content .card-sub { font-size: 12px; color: #6b7280; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; line-height: 1.5; }
+  .content .row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; font-size: 14px; }
+  .content .row-label { color: #4b5563; }
+  .content .row-price { color: #111827; font-weight: 700; }
+  .hero { text-align: center; margin: 0 auto 32px; padding: 28px 20px; background: #ffffff; border: 2px solid #7c3aed; border-radius: 16px; max-width: 900px; }
+  .hero-title { font-size: 24px; font-weight: 800; color: #111827; margin: 0 0 14px; letter-spacing: -0.02em; line-height: 1.4; }
+  .hero-accent { background: linear-gradient(180deg, transparent 60%, #ddd6fe 60%); padding: 0 4px; }
+  .hero-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badge { padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid; white-space: nowrap; }
+  .badge-red { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+  .badge-blue { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+  .badge-green { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+  .badge-amber { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+  .badge-purple { background: #faf5ff; color: #6b21a8; border-color: #e9d5ff; }
+  @media (max-width: 600px) {
+    .hero { padding: 22px 16px; }
+    .hero-title { font-size: 18px; }
+    .badge { font-size: 11px; padding: 4px 10px; }
+  }
+  .admin-corner { position: fixed; top: 12px; right: 12px; z-index: 30; display: flex; gap: 6px; }
+  .btn { font-size: 12px; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; border: 1px solid transparent; transition: all 0.15s; }
+  .btn-dot { background: #ffffff; border-color: #e5e7eb; color: #9ca3af; }
+  .btn-dot:hover { color: #374151; border-color: #d1d5db; }
+  .btn-edit { background: #7c3aed; color: #ffffff; font-weight: 600; }
+  .btn-edit:hover { background: #6d28d9; }
+  .btn-out { background: #ffffff; border-color: #e5e7eb; color: #6b7280; }
+  .btn-out:hover { color: #1f2937; border-color: #d1d5db; }
+  .editor { display: none; }
+  .editor.active { display: block; }
+  .editor-wrap { max-width: 1100px; margin: 0 auto; }
+  .view { display: block; }
+  .view.hidden { display: none; }
+  .hint { font-size: 12px; color: #6b7280; margin-bottom: 10px; line-height: 1.6; background: #fef3c7; padding: 10px 12px; border-radius: 6px; border: 1px solid #fde68a; }
+  .hint code { color: #b45309; font-weight: 600; }
+  .helper-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .helper-btn { font-size: 12px; padding: 7px 11px; border-radius: 6px; background: #ffffff; border: 1px solid #d1d5db; color: #374151; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .helper-btn:hover { background: #f9fafb; border-color: #9ca3af; transform: translateY(-1px); }
+  .helper-btn.helper-red { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+  .helper-btn.helper-red:hover { background: #fee2e2; }
+  .helper-btn.helper-blue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+  .helper-btn.helper-blue:hover { background: #dbeafe; }
+  .helper-btn.helper-green { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  .helper-btn.helper-green:hover { background: #dcfce7; }
+  .helper-btn.helper-amber { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+  .helper-btn.helper-amber:hover { background: #fef3c7; }
+  textarea { width: 100%; height: 75vh; padding: 16px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; color: #111827; font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 14px; line-height: 1.6; resize: vertical; outline: none; }
+  textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .editor-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  .btn-save { background: #7c3aed; color: #ffffff; font-weight: 600; padding: 8px 18px; }
+  .btn-save:hover { background: #6d28d9; }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-cancel { background: #ffffff; border-color: #e5e7eb; color: #6b7280; padding: 8px 18px; }
+  .btn-cancel:hover { background: #f9fafb; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+  .modal.active { display: flex; }
+  .modal-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; width: 100%; max-width: 320px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); }
+  .modal-card input { width: 100%; padding: 12px 14px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; color: #111827; font-size: 14px; outline: none; font-family: inherit; }
+  .modal-card input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .pw-error { font-size: 12px; color: #dc2626; margin-top: 8px; display: none; }
+  .pw-error.show { display: block; }
+  .pw-confirm { width: 100%; margin-top: 14px; background: #7c3aed; color: #ffffff; font-weight: 600; padding: 11px; }
+  .pw-confirm:hover { background: #6d28d9; }
+  .loader { text-align: center; color: #9ca3af; font-size: 13px; padding: 40px 0; }
+  .openchat-sidebar { position: fixed; left: 16px; top: 50%; transform: translateY(-50%); z-index: 30; width: 240px; display: none; flex-direction: column; gap: 10px; }
+  .openchat-sidebar.active { display: flex; }
+  .openchat-sidebar a { display: block; border-radius: 12px; overflow: hidden; background: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.08); transition: transform 0.15s, box-shadow 0.15s; cursor: pointer; }
+  .openchat-sidebar a:hover { transform: translateX(3px); box-shadow: 0 6px 20px rgba(245,158,11,0.2); border-color: #fbbf24; }
+  .openchat-sidebar img { display: block; width: 100%; height: auto; }
+  .openchat-sidebar .cap { padding: 8px 10px; font-size: 12px; color: #b45309; text-align: center; font-weight: 700; background: #fef3c7; }
+  .channel-cta { position: fixed; right: 92px; bottom: 24px; z-index: 35; background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(124,58,237,0.4); border: none; font-family: inherit; transition: transform 0.15s; animation: pulse 2s infinite; white-space: nowrap; }
+  .channel-cta:hover { transform: translateY(-2px) scale(1.03); }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 6px 20px rgba(124,58,237,0.4); } 50% { box-shadow: 0 6px 28px rgba(124,58,237,0.7); } }
+  .channel-cta .arrow { display: inline-block; margin-left: 4px; transition: transform 0.2s; }
+  .channel-cta:hover .arrow { transform: translateX(3px); }
+  @media (max-width: 1099px) {
+    .openchat-sidebar { position: static; transform: none; width: auto; max-width: 320px; margin: 0 auto 20px; flex-direction: row; }
+    .openchat-sidebar a { flex: 1; }
+  }
+  @media (max-width: 700px) {
+    .openchat-sidebar { max-width: 200px; margin-bottom: 16px; }
+    .openchat-sidebar .cap { font-size: 10px; padding: 4px 6px; }
+    .channel-cta { right: 76px; bottom: 16px; padding: 10px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-corner" id="adminCorner">
+  <button class="btn btn-dot" id="loginBtn" aria-label="관리자">·</button>
+</div>
+
+<main>
+  <div class="hero">
+    <h1 class="hero-title">⚔ 디아블로4 <span class="hero-accent">다있소 최저가</span> 상점 ⚔</h1>
+    <div class="hero-badges">
+      <span class="badge badge-purple">🛡 아이템 세팅 전문</span>
+      <span class="badge badge-red">💰 업계 최저가 보장</span>
+      <span class="badge badge-blue">⚡ 빠른 작업</span>
+      <span class="badge badge-green">🤝 안전거래 · 신뢰 100%</span>
+    </div>
+  </div>
+  <div id="viewMode" class="view">
+    <div class="content" id="content"><div class="loader">불러오는 중…</div></div>
+  </div>
+  <div id="editMode" class="editor">
+    <div class="editor-wrap">
+    <p class="hint">서식: # 큰제목 ## 중제목 ### 소제목 · **굵게** *기울임* ==형광== ~~취소선~~ · [red][blue][green][amber][box] 박스 · [$]가격[/$] · --- 구분선<br/>카드그리드: <code>[grid] [card 제목 | 부제목] 항목 | 가격 [/card] [/grid]</code><br/>HTML 태그도 그대로 사용 가능: &lt;font color="red"&gt;빨강&lt;/font&gt; &lt;b&gt;굵게&lt;/b&gt;</p>
+    <div class="helper-bar" id="helperBar">
+      <button type="button" class="helper-btn" data-tpl="card">📦 카드 추가</button>
+      <button type="button" class="helper-btn" data-tpl="grid">🔲 그리드 시작</button>
+      <button type="button" class="helper-btn" data-tpl="h1"># 큰 제목</button>
+      <button type="button" class="helper-btn" data-tpl="h2">## 중 제목</button>
+      <button type="button" class="helper-btn" data-tpl="hr">━ 구분선</button>
+      <button type="button" class="helper-btn helper-red" data-tpl="red">🔴 빨강</button>
+      <button type="button" class="helper-btn helper-blue" data-tpl="blue">🔵 파랑</button>
+      <button type="button" class="helper-btn helper-green" data-tpl="green">🟢 초록</button>
+      <button type="button" class="helper-btn helper-amber" data-tpl="amber">🟡 노랑</button>
+      <button type="button" class="helper-btn" data-tpl="bold">**굵게**</button>
+      <button type="button" class="helper-btn" data-tpl="hl">==형광==</button>
+      <button type="button" class="helper-btn" data-tpl="strike">~~취소선~~</button>
+      <button type="button" class="helper-btn" id="copyAllBtn" style="margin-left:auto;">📋 전체 복사</button>
+      <button type="button" class="helper-btn" id="resetBtn">↺ 초기 양식</button>
+    </div>
+    <textarea id="editText" spellcheck="false"></textarea>
+    <div class="editor-actions">
+      <button class="btn btn-cancel" id="cancelBtn">취소</button>
+      <button class="btn btn-save" id="saveBtn">저장</button>
+    </div>
+    </div>
+  </div>
+</main>
+
+<div id="openchatSidebar" class="openchat-sidebar">
+  <a id="openchatBottom" href="#" target="_blank" rel="noopener" aria-label="주문수 1위 최저가">
+    <img src="openchat-bottom.png" alt="디아블로4 주문수 1위 최저가" />
+    <div class="cap">▲ 클릭해서 입장 ▲</div>
+  </a>
+</div>
+
+<button id="channelCta" class="channel-cta" type="button">
+  💬 바로 주문접수 ▶
+</button>
+
+<div class="modal" id="loginModal">
+  <div class="modal-card">
+    <input type="password" id="pwInput" placeholder="비밀번호" autocomplete="off" />
+    <p class="pw-error" id="pwError">비밀번호 틀림</p>
+    <button class="btn pw-confirm" id="pwConfirm">확인</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ============================================================
+// 설정 — 여기 두 줄만 바꾸세요
+// ============================================================
+const ADMIN_PASSWORD = "CHANGE-ME-DAISSO";  // ← 다있소 관리자 비번 (배포 전 변경 필수)
+const CHANNELTALK_PLUGIN_KEY = "";  // ← 다있소 채널톡 키 (새로 발급 후 입력)
+const KAKAO_OPENCHAT_URL = "";  // ← 다있소 카카오 오픈채팅 주소 (있으면 입력, 없으면 비워둠)
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAQH4HxN0FEwAV2xpSJ_0_XY-OElO_Xqak",
+  authDomain: "leestar-d4-8782b.firebaseapp.com",
+  projectId: "leestar-d4-8782b",
+  storageBucket: "leestar-d4-8782b.firebasestorage.app",
+  messagingSenderId: "348543186012",
+  appId: "1:348543186012:web:7417eb658d97aa08032299"
+};
+
+const DEFAULT_CONTENT = `[grid]
+
+[card ⚔ 야만용사 풀세팅 | 전직업 가능 · MAX 위상 · 룬셋 포함]
+입문 세팅 | 50,000원
+중급 세팅 | 120,000원
+만렙 풀세팅 | 250,000원
+[/card]
+
+[card 🔮 마법사 풀세팅 | 유고스 빌드 · MAX 위상 · 룬셋 포함]
+입문 세팅 | 50,000원
+중급 세팅 | 120,000원
+만렙 풀세팅 | 250,000원
+[/card]
+
+[card 🏹 도적 풀세팅 | 관통/덫 빌드 · MAX 위상]
+입문 세팅 | 50,000원
+중급 세팅 | 120,000원
+만렙 풀세팅 | 250,000원
+[/card]
+
+[card ⚡ 강령술사 풀세팅 | 시체폭발/뼈창 빌드]
+입문 세팅 | 50,000원
+중급 세팅 | 120,000원
+만렙 풀세팅 | 250,000원
+[/card]
+
+[card 🛡 방어구 부품 | 투구 · 갑옷 · 장갑 · 바지 · 신발]
+1부위 3옵 | 8,000원
+1부위 4옵 | 15,000원
+전부위 풀세팅 | 75,000원
+[/card]
+
+[card ⚔ 무기/장신구 | 무기 · 부무기 · 반지 · 목걸이]
+무기 4옵 | 25,000원
+반지 4옵 | 15,000원
+목걸이 4옵 | 15,000원
+[/card]
+
+[card 💎 보석/룬 | 루비 · 에메 · 룬셋]
+보석 5개 | 6,000원
+보석 10개 | 10,000원
+룬 3셋 | 20,000원
+[/card]
+
+[card ✨ 위상/각인 | MAX 위상 · 전설 각인]
+MAX 위상 1개 | 5,000원
+전설 각인 1개 | 3,000원
+[/card]
+
+[/grid]
+
+---
+
+· 안전거래 진행합니다
+· 우측 하단 [💬 바로 주문접수 ▶] 버튼으로 문의 주세요`;
+
+// ============================================================
+// Firebase 초기화
+// ============================================================
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const docRef = doc(db, "daisso", "main");
+
+// ============================================================
+// DOM
+// ============================================================
+const $ = (id) => document.getElementById(id);
+const adminCorner = $("adminCorner");
+const viewMode = $("viewMode");
+const editMode = $("editMode");
+const contentEl = $("content");
+const editText = $("editText");
+const loginBtn = $("loginBtn");
+const loginModal = $("loginModal");
+const pwInput = $("pwInput");
+const pwConfirm = $("pwConfirm");
+const pwError = $("pwError");
+const saveBtn = $("saveBtn");
+const cancelBtn = $("cancelBtn");
+
+let isAdmin = false;
+let currentContent = DEFAULT_CONTENT;
+
+// ============================================================
+// 마크다운 → HTML 변환 (간단 버전)
+// ============================================================
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderMarkdown(text) {
+  text = text.replace(/\[grid\]([\s\S]*?)\[\/grid\]/g, function(_, inner) {
+    return '<div class="grid">' + inner + '</div>';
+  });
+
+  text = text.replace(/\[card\s+([^\]]+)\]([\s\S]*?)\[\/card\]/g, function(_, header, body) {
+    const parts = header.split('|').map(s => s.trim());
+    const title = parts[0] || '';
+    const sub = parts[1] || '';
+    const rows = body.split('\n').map(line => {
+      const m = line.match(/^\s*(.+?)\s*\|\s*(.+?)\s*$/);
+      if (m) return '<div class="row"><span class="row-label">' + m[1] + '</span><span class="row-price">' + m[2] + '</span></div>';
+      if (line.trim()) return '<div class="row"><span class="row-label">' + line.trim() + '</span></div>';
+      return '';
+    }).join('');
+    let html = '<div class="card"><div class="card-title">' + title + '</div>';
+    if (sub) html += '<div class="card-sub">' + sub + '</div>';
+    html += rows + '</div>';
+    return html;
+  });
+
+  const lines = text.split("\n");
+  const out = [];
+  for (let line of lines) {
+    let l = line;
+    if (/^---+\s*$/.test(line.trim())) { out.push("<hr/>"); continue; }
+    if (/^###\s+/.test(line)) { out.push("<h3>" + l.replace(/^###\s+/, "") + "</h3>"); continue; }
+    if (/^##\s+/.test(line))  { out.push("<h2>" + l.replace(/^##\s+/, "") + "</h2>"); continue; }
+    if (/^#\s+/.test(line))   { out.push("<h1>" + l.replace(/^#\s+/, "") + "</h1>"); continue; }
+    l = l.replace(/\[red\](.+?)\[\/red\]/g, '<span class="box box-red">$1</span>');
+    l = l.replace(/\[blue\](.+?)\[\/blue\]/g, '<span class="box box-blue">$1</span>');
+    l = l.replace(/\[green\](.+?)\[\/green\]/g, '<span class="box box-green">$1</span>');
+    l = l.replace(/\[amber\](.+?)\[\/amber\]/g, '<span class="box box-amber">$1</span>');
+    l = l.replace(/\[box\](.+?)\[\/box\]/g, '<span class="box">$1</span>');
+    l = l.replace(/\[\$\](.+?)\[\/\$\]/g, '<span class="price">$1</span>');
+    l = l.replace(/~~([^~]+)~~/g, '<span class="strike">$1</span>');
+    l = l.replace(/==([^=]+)==/g, '<span class="highlight">$1</span>');
+    l = l.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    l = l.replace(/(?<![a-zA-Z<])\*([^*\n<]+)\*(?![a-zA-Z>])/g, "<em>$1</em>");
+    out.push(l);
+  }
+  return out.join("\n");
+}
+
+function displayContent(text) {
+  contentEl.innerHTML = renderMarkdown(text);
+}
+
+// ============================================================
+// 콘텐츠 로드
+// ============================================================
+async function loadContent() {
+  try {
+    const snap = await getDoc(docRef);
+    if (snap.exists() && snap.data().content) {
+      currentContent = snap.data().content;
+    } else {
+      currentContent = DEFAULT_CONTENT;
+    }
+  } catch (e) {
+    console.error("load fail", e);
+    currentContent = DEFAULT_CONTENT;
+  }
+  displayContent(currentContent);
+}
+
+// ============================================================
+// 콘텐츠 저장
+// ============================================================
+async function saveContent(newText) {
+  await setDoc(docRef, {
+    content: newText,
+    updatedAt: Date.now()
+  });
+}
+
+// ============================================================
+// 관리자 모드 UI
+// ============================================================
+function renderAdminButtons() {
+  adminCorner.innerHTML = "";
+  if (isAdmin) {
+    const editBtn = document.createElement("button");
+    editBtn.className = "btn btn-edit";
+    editBtn.textContent = "편집";
+    editBtn.onclick = enterEdit;
+
+    const logoutBtn = document.createElement("button");
+    logoutBtn.className = "btn btn-out";
+    logoutBtn.textContent = "로그아웃";
+    logoutBtn.onclick = () => { isAdmin = false; renderAdminButtons(); };
+
+    adminCorner.appendChild(editBtn);
+    adminCorner.appendChild(logoutBtn);
+  } else {
+    const dot = document.createElement("button");
+    dot.className = "btn btn-dot";
+    dot.setAttribute("aria-label", "관리자");
+    dot.textContent = "·";
+    dot.onclick = openLogin;
+    adminCorner.appendChild(dot);
+  }
+}
+
+// ============================================================
+// 로그인
+// ============================================================
+function openLogin() {
+  loginModal.classList.add("active");
+  pwInput.value = "";
+  pwError.classList.remove("show");
+  setTimeout(() => pwInput.focus(), 50);
+}
+
+function closeLogin() {
+  loginModal.classList.remove("active");
+}
+
+function tryLogin() {
+  if (pwInput.value === ADMIN_PASSWORD) {
+    isAdmin = true;
+    closeLogin();
+    renderAdminButtons();
+  } else {
+    pwError.classList.add("show");
+  }
+}
+
+pwConfirm.onclick = tryLogin;
+pwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+loginModal.onclick = (e) => { if (e.target === loginModal) closeLogin(); };
+
+// ============================================================
+// 편집 모드
+// ============================================================
+function enterEdit() {
+  editText.value = currentContent && currentContent.trim() ? currentContent : DEFAULT_CONTENT;
+  viewMode.classList.add("hidden");
+  editMode.classList.add("active");
+  adminCorner.style.display = "none";
+}
+
+function exitEdit() {
+  editMode.classList.remove("active");
+  viewMode.classList.remove("hidden");
+  adminCorner.style.display = "flex";
+}
+
+cancelBtn.onclick = exitEdit;
+
+const TEMPLATES = {
+  card: '\n[card ✨ 카테고리 | 부제목 설명]\n1회 | 6,000원\n5회 | 28,000원\n10회 | 52,000원\n[/card]\n',
+  grid: '\n[grid]\n\n[/grid]\n',
+  h1: '\n# 큰 제목\n',
+  h2: '\n## 중간 제목\n',
+  hr: '\n---\n',
+  red: '[red]내용[/red]',
+  blue: '[blue]내용[/blue]',
+  green: '[green]내용[/green]',
+  amber: '[amber]내용[/amber]',
+  bold: '**굵게**',
+  hl: '==형광==',
+  strike: '~~취소선~~'
+};
+
+function insertAtCursor(text) {
+  const ta = editText;
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const before = ta.value.substring(0, start);
+  const after = ta.value.substring(end);
+  ta.value = before + text + after;
+  const newPos = start + text.length;
+  ta.focus();
+  ta.setSelectionRange(newPos, newPos);
+}
+
+document.querySelectorAll(".helper-btn").forEach(btn => {
+  if (btn.id === "copyAllBtn" || btn.id === "resetBtn") return;
+  btn.onclick = () => {
+    const tpl = btn.getAttribute("data-tpl");
+    if (TEMPLATES[tpl]) insertAtCursor(TEMPLATES[tpl]);
+  };
+});
+
+document.getElementById("copyAllBtn").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(editText.value);
+    const b = document.getElementById("copyAllBtn");
+    const old = b.textContent;
+    b.textContent = "✓ 복사됨";
+    setTimeout(() => { b.textContent = old; }, 1500);
+  } catch (e) {
+    editText.select();
+    document.execCommand("copy");
+  }
+};
+
+document.getElementById("resetBtn").onclick = () => {
+  if (confirm("편집창을 초기 카드 양식으로 되돌릴까요?\n(저장 전이라면 현재 사이트 내용은 그대로 유지됩니다)")) {
+    editText.value = DEFAULT_CONTENT;
+    editText.focus();
+  }
+};
+
+saveBtn.onclick = async () => {
+  saveBtn.disabled = true;
+  saveBtn.textContent = "저장중…";
+  try {
+    await saveContent(editText.value);
+    currentContent = editText.value;
+    displayContent(currentContent);
+    exitEdit();
+  } catch (e) {
+    alert("저장 실패: " + e.message);
+  }
+  saveBtn.disabled = false;
+  saveBtn.textContent = "저장";
+};
+
+// ============================================================
+// 채널톡
+// ============================================================
+function bootChannelTalk() {
+  if (!CHANNELTALK_PLUGIN_KEY) return;
+  (function() {
+    var w = window;
+    if (w.ChannelIO) return;
+    var ch = function() { ch.c(arguments); };
+    ch.q = []; ch.c = function(args) { ch.q.push(args); };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) return;
+      w.ChannelIOInitialized = true;
+      var s = document.createElement("script");
+      s.type = "text/javascript"; s.async = true;
+      s.src = "https://cdn.channel.io/plugin/ch-plugin-web.js";
+      document.head.appendChild(s);
+    }
+    if (document.readyState === "complete") l();
+    else window.addEventListener("DOMContentLoaded", l);
+  })();
+  window.ChannelIO("boot", { pluginKey: CHANNELTALK_PLUGIN_KEY });
+}
+
+// ============================================================
+// 카카오 오픈채팅 + 채널톡 CTA
+// ============================================================
+function setupKakaoButton() {
+  if (KAKAO_OPENCHAT_URL) {
+    $("openchatBottom").href = KAKAO_OPENCHAT_URL;
+    $("openchatSidebar").classList.add("active");
+  }
+}
+
+function setupChannelCta() {
+  const cta = $("channelCta");
+  cta.onclick = () => {
+    if (window.ChannelIO) {
+      window.ChannelIO("showMessenger");
+    } else {
+      alert("채팅 위젯이 아직 준비중입니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+}
+
+// ============================================================
+// 시작
+// ============================================================
+renderAdminButtons();
+bootChannelTalk();
+setupKakaoButton();
+setupChannelCta();
+loadContent();
+</script>
+
+</body>
+</html>
